@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todoey/models/task_data.dart';
+import 'package:todoey/widgets/task_tile.dart';
 
 class TaskList extends StatelessWidget {
-  const TaskList({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: 3,
-      itemBuilder: (BuildContext context, int index) {
-        const list = ['task1', 'task2', 'task3'];
-        print('index$index');
-        return ListTile(
-          title: Text(list[index]),
-          trailing: Checkbox(
-            onChanged: (value) {},
-            value: false,
-          ),
-        );
-      },
-    );
+    return Consumer<TaskData>(builder: (context, taskData, child) {
+      return ListView.builder(
+          itemCount: taskData.taskCount,
+          itemBuilder: (context, index) {
+            return TaskTile(
+              isChecked: taskData.tasks[index].isDone,
+              taskTitle: taskData.tasks[index].name,
+              taskIndex: index,
+              toggleCheckBoxState: (value) {
+                taskData.toggleDone(index, value!);
+              },
+            );
+          });
+    });
   }
 }

@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todoey/models/task_data.dart';
 
-class AddTaskScreen extends StatelessWidget {
-  const AddTaskScreen({Key? key}) : super(key: key);
+class AddTaskScreen extends StatefulWidget {
+  @override
+  State<AddTaskScreen> createState() => _AddTaskScreenState();
+}
+
+class _AddTaskScreenState extends State<AddTaskScreen> {
+  String newTaskTitle = '';
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color(0xff757575),
+      color: const Color(0xff757575),
       child: Container(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -35,19 +42,29 @@ class AddTaskScreen extends StatelessWidget {
               TextField(
                 autofocus: true,
                 textAlign: TextAlign.center,
-                onChanged: (value) {},
+                onChanged: (value) {
+                  newTaskTitle = value;
+                },
               ),
-              TextButton(
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.lightBlueAccent),
-                ),
-                onPressed: () {},
-                child: const Text(
-                  'Add',
-                  style: TextStyle(color: Colors.white),
-                ),
-              )
+              Consumer<TaskData>(builder: (context, model, child) {
+                return TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Colors.lightBlueAccent),
+                  ),
+                  onPressed: () {
+                    if (newTaskTitle == '') {
+                      return;
+                    }
+                    model.addTask(newTaskTitle);
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Add',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                );
+              }),
             ],
           ),
         ),
